@@ -29,7 +29,7 @@ To run this project locally, the follow tools need to be installed:
 Clone the project:
 
 ```
-git clone https://github.com/wencesJ/figo-payment.git
+git clone https://github.com/wencesJ/figo-payment-assessment.git
 ```
 
 Move into the project directory and install it's dependencies:

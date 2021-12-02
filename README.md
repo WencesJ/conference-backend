@@ -6,7 +6,7 @@ Figo-Payment Project
 
 Figo-Payment - A minimal wallet application
 
-The simple **Figo-Payment Api** demonstrates a minimal twitter application that allows users to:
+The simple **Figo-Payment Api** demonstrates a minimal wallet application that allows users to:
 
 **Registration and Authentication - Wallet Feature**
 

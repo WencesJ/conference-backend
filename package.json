@@ -1,0 +1,82 @@
+{
+    "name": "figo-payment",
+    "version": "1.0.0",
+    "description": "backend build template",
+    "main": "dist/server.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "build": "tsc && NODE_ENV=production nodemon dist/server.js",
+        "start": "NODE_ENV=production nodemon -r tsconfig-paths/register src/server.ts ",
+        "start:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register src/server.ts ",
+        "clean": "rm -rf node_modules/ build/ yarn.lock package-lock.json *.log",
+        "lint": "eslint . & echo 'lint complete'",
+        "debug": "node --inspect-brk ./src/server.js",
+        "test": "NODE_ENV=test mocha --checks-leaks -r tsconfig-paths/register -r ts-node/register \"*/**/*.spec.ts\""
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "author": "Wenceslas Jonah",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/WencesJ/figo-payment/issues"
+    },
+    "homepage": "",
+    "dependencies": {
+        "@types/socket.io": "^3.0.2",
+        "app-root-path": "^3.0.0",
+        "bcrypt": "^5.0.0",
+        "connect-mongo": "^3.2.0",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "express-mongo-sanitize": "^2.0.0",
+        "express-rate-limit": "^5.1.3",
+        "express-session": "^1.17.1",
+        "helmet": "^4.1.0",
+        "hpp": "^0.2.3",
+        "joi": "^17.3.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.10.5",
+        "morgan": "^1.10.0",
+        "nodemailer": "^6.4.14",
+        "pug": "^3.0.2",
+        "reflect-metadata": "^0.1.13",
+        "shelljs": "^0.8.4",
+        "short-unique-id": "^3.0.4",
+        "slugify": "^1.4.5",
+        "socket.io": "^4.4.0",
+        "validator": "^13.1.1",
+        "winston": "^3.3.3",
+        "xss-clean": "^0.1.1"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^3.0.0",
+        "@types/cors": "^2.8.10",
+        "@types/express": "^4.17.11",
+        "@types/express-mongo-sanitize": "^1.3.2",
+        "@types/express-session": "^1.17.4",
+        "@types/hpp": "^0.2.1",
+        "@types/jsonwebtoken": "^8.5.0",
+        "@types/mocha": "^9.0.0",
+        "@types/morgan": "^1.9.2",
+        "@types/node": "^14.14.31",
+        "@types/nodemailer": "^6.4.0",
+        "@types/pug": "^2.0.4",
+        "@types/supertest": "^2.0.11",
+        "@types/validator": "^13.1.3",
+        "chai": "^4.2.0",
+        "chai-http": "^4.3.0",
+        "esm": "^3.2.25",
+        "mocha": "^8.2.0",
+        "nodemon": "^2.0.15",
+        "npm-run-all": "^4.1.5",
+        "supertest": "^6.1.6",
+        "ts-node": "^10.4.0",
+        "tsconfig-paths": "^3.12.0",
+        "typescript": "^4.5.2"
+    }
+}

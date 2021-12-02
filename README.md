@@ -39,10 +39,11 @@ npm install
 ```
 
 To start the dev API server run the following command:
+make sure the config.env file has been created using the config.example file in the /src/libs/config folder.
+
 ```
 npm start:dev
 ```
-make sure the config.env file has been created using the config.example file in the /src/libs/config folder.
 
 For Rapid Developement Use An Api Client eg:
 
@@ -54,7 +55,7 @@ Todo:Api Documentation
 
 **Open the source code and start editing!**
 
-Your site is now running at `http://localhost:3000/api/v1/`!
+Your site is now running at `http://localhost:3000/api/v1/`
 
 Open the `figo-payment` directory in your code editor of choice and edit files under `src`. Save your changes and the browser will update in real time!
 

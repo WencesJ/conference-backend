@@ -9,6 +9,7 @@ Figo-Payment - A minimal wallet application
 The simple **Figo-Payment Api** demonstrates a minimal twitter application that allows users to:
 
 **Registration and Authentication - User Feature**
+
     - Register(creates a wallet)
     - Login
     - Get a Wallet

@@ -85,7 +85,7 @@ class WalletController extends Authentication {
              */
 
             const { error, value: { data: wallet = {} } = {} } =
-                await this.WalletService.get({ company: queryFields.company });
+                await this.WalletService.get({ _id: queryFields._id, company: queryFields.company });
 
             // Checks if data returned is null
             if (error) {

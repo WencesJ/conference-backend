@@ -3,17 +3,30 @@ import Joi from 'joi';
 
 const defaultStringValidate = Joi.string().lowercase().trim();
 
+interface UserSanitizeInterface {
+    createUser: string,
+    getUser: string,
+    updateUser: string,
+    loginUser: string,
+    changeUserEmail: string,
+    changeUserPassword: string,
+}
 
 /**
- * @description Joi Schema Validation For Wallet Feature
+ * @description Joi Schema Validation For User Feature
  */
 
-const WalletSanitize = {
-    createWallet: {
+const UserSanitize = {
+    createUser: {
         params: {},
     
         body: {
-            company: defaultStringValidate
+            firstName: defaultStringValidate
+                .required()
+                .min(3)
+                .max(50),
+            
+            lastName: defaultStringValidate
                 .required()
                 .min(3)
                 .max(50),
@@ -24,46 +37,41 @@ const WalletSanitize = {
         },
     },
     
-    getWallet: {
+    getUser: {
         params: {
-            company: defaultStringValidate.required(),
+            
         },
     
         body: {},
     },
 
-    updateWallet: {
+    updateUser: {
         params: {
-            company: defaultStringValidate.required(),
+            _id: defaultStringValidate.required(),
         },
     
         body: {
-            company: defaultStringValidate,
-            amount: Joi.number()
-            // other wallet details like description, etc.
+            firstName: defaultStringValidate
+                .min(3)
+                .max(50),
+            
+            lastName: defaultStringValidate
+                .min(3)
+                .max(50),
+            
+            // other user details like description, etc.
         },
     },
     
-    deleteWallet: {
+    deleteUser: {
         params: {
-            company: defaultStringValidate.required(),
+            _id: defaultStringValidate.required(),
         },
     
         body: {},
     },
     
-    walletTransferFunds: {
-        params: {
-            company: defaultStringValidate.required(),
-        },
-    
-        body: {
-            amount: Joi.number().required().min(100),
-            recipientWallet: defaultStringValidate.required(),
-        },
-    },
-
-    loginWallet: {
+    loginUser: {
         params: {},
     
         body: {
@@ -73,10 +81,8 @@ const WalletSanitize = {
         },
     },
     
-    changeWalletPassword: {
-        params: {
-            company: defaultStringValidate.required(),
-        },
+    changeUserPassword: {
+        params: {},
     
         body: {
             currentPassword: defaultStringValidate.required().min(6).max(30),
@@ -85,10 +91,8 @@ const WalletSanitize = {
         },
     },
 
-    changeWalletEmail: {
-        params: {
-            company: defaultStringValidate.required(),
-        },
+    changeUserEmail: {
+        params: {},
     
         body: {
             email: defaultStringValidate.email().required(),
@@ -96,7 +100,4 @@ const WalletSanitize = {
     },
     
 }
-
-registerSanitizeSchema(WalletSanitize);
-
-export default WalletSanitize;
+export default registerSanitizeSchema(UserSanitize) as unknown as UserSanitizeInterface;

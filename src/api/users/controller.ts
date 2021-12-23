@@ -1,7 +1,7 @@
 // NODE MODULES
 
-// WALLET MODULES
-import walletService from './service';
+// USER MODULES
+import userService from './service';
 
 import { CustomRequest } from '@libs/interfaces/user';
 
@@ -11,66 +11,66 @@ import { AppError, catchAsync } from '@libs/error';
 
 import CONSTANTS from '@libs/shared/constants';
 
-import Authentication from '../auth/auth';
+import { Authentication } from '@api/auth';
 
 const { STATUS, MSG } = CONSTANTS;
 
 // end of requiring the modules
 
-// WALLET AUTHENTICATION CONTROLLERS
+// USER AUTHENTICATION CONTROLLERS
 /**
- * Wallet Controller class
+ * User Controller class
  * @class
  */
 
-class WalletController extends Authentication {
+class UserController extends Authentication {
     /**
-     * @description Creates wallet controller
-     * @param {Object} [walletService = walletServiceInstance] - same as walletServiceInstance Object
+     * @description Creates user controller
+     * @param {Object} [userService = userServiceInstance] - same as userServiceInstance Object
      *
      */
 
-    constructor(public WalletService = walletService) {
-        super(WalletService);
+    constructor(public UserService = userService) {
+        super(UserService);
         /**
          * @type {Object}
-         * @borrows walletService
+         * @borrows userService
          */
     }
 
     /**
-     * Creates a Wallet
+     * Creates a User
      * @async
      * @access public
      */
-    createWallet: RequestHandler = catchAsync(
+    createUser: RequestHandler = catchAsync(
         async (req: Request, res: Response) => {
             /**
-             * @type {Object} - An Object of fields required for creating a Wallet.
+             * @type {Object} - An Object of fields required for creating a User.
              */
-            const walletDetails = { ...req.body };
+            const userDetails = { ...req.body };
 
             /**
              * @type {Object} - Holds the created data object.
              */
-            const { value: { data: wallet = {} } = {} } =
-                await this.WalletService.create(walletDetails);
+            const { value: { data: user = {} } = {} } =
+                await this.UserService.create(userDetails);
 
             // Returns a json response
             res.status(STATUS.CREATED).json({
                 message: MSG.SUCCESS,
-                wallet,
+                user,
             });
         }
     );
 
     /**
-     * Gets one Wallet Data
+     * Gets one User Data
      * @async
-     * @route {GET} /:company
+     * @route {GET} /:_id
      * @access protected
      */
-    getWallet: RequestHandler = catchAsync(
+    getUser: RequestHandler = catchAsync(
         async (req: CustomRequest, res: Response, next: NextFunction) => {
             /**
              * @type {Object} - An Object of fields to be queried.
@@ -81,11 +81,11 @@ class WalletController extends Authentication {
             /**
              * @type {Object|null} - Holds either the returned data object or null.
              *
-             * @description Use Either a mongodbUniqueId Or company to Search
+             * @description Use Either a mongodbUniqueId Or _id to Search
              */
 
-            const { error, value: { data: wallet = {} } = {} } =
-                await this.WalletService.get({ _id: queryFields._id, company: queryFields.company });
+            const { error, value: { data: user = {} } = {} } =
+                await this.UserService.get({ _id: req.user._id });
 
             // Checks if data returned is null
             if (error) {
@@ -95,44 +95,44 @@ class WalletController extends Authentication {
             // Returns a json response
             res.status(STATUS.OK).json({
                 message: MSG.SUCCESS,
-                wallet,
+                user,
             });
         }
     );
 
     /**
-     * Gets All Wallet Datas
+     * Gets All User Datas
      * @async
      * @route {GET} /
      * @access public
      */
-    getAllWallets = catchAsync(async (req: Request, res: Response) => {
+    getAllUsers = catchAsync(async (req: Request, res: Response) => {
         /**
          * @type {Object} - An Object of fields to be queried.
          *
-         * @empty - Returns Whole Data In Wallets Collection
+         * @empty - Returns Whole Data In Users Collection
          */
         const queryFields: any = { ...req.query };
 
         /**
          * @type {Object|null} - Holds either the returned data object or null.
          */
-        const { value: { data: wallets = {} } = {} } =
-            await this.WalletService.getAll(queryFields);
+        const { value: { data: users = {} } = {} } =
+            await this.UserService.getAll(queryFields);
 
         // Returns a json response
         res.status(STATUS.OK).json({
             message: MSG.SUCCESS,
-            wallets,
+            users,
         });
     });
 
     /**
-     * Deletes one Wallet Data
+     * Deletes one User Data
      * @async
      * @access protected
     */
-    deleteWallet = catchAsync(
+    deleteUser = catchAsync(
         async (req: Request, res: Response, next: NextFunction) => {
             /**
              * @type {Object} - An Object of fields to be queried.
@@ -141,10 +141,10 @@ class WalletController extends Authentication {
             /**
              * @type {Object|null} - Holds either the returned data object or null.
              *
-             * @description deletes a wallet
+             * @description deletes a user
              */
 
-            await this.WalletService.delete(queryFields);
+            await this.UserService.delete(queryFields);
 
             // Returns a json response
             res.status(STATUS.NO_CONTENT).json({
@@ -154,28 +154,28 @@ class WalletController extends Authentication {
     );
 
     /**
-     * Updates one Wallet Data
+     * Updates one User Data
      * @async
      * @access protected
     */
 
-    updateWallet = catchAsync(
+    updateUser = catchAsync(
         async (req: CustomRequest, res: Response, next: NextFunction) => {
             /**
              * @type {Object} - An Object of fields to be queried.
              */
-            const queryParams = { ...req.params };
+            const queryParams = { _id: req.user._id };
 
             const queryFields = { ...req.body };
 
             /**
              * @type {Object|null} - Holds either the returned data object or null.
              *
-             * @description Updates a wallet
+             * @description Updates a user
              */
 
-            const { error, value: { data: wallet = {} } = {} } =
-                await this.WalletService.update(queryParams, queryFields);
+            const { error, value: { data: user = {} } = {} } =
+                await this.UserService.update(queryParams, queryFields);
 
             if (error) {
                 return next(new AppError(error.msg, error.code));
@@ -184,48 +184,12 @@ class WalletController extends Authentication {
             // Returns a json response
             res.status(STATUS.ACCEPTED).json({
                 message: MSG.SUCCESS,
-                wallet,
-            });
-        }
-    );
-
-    /**
-     * Transfers funds from one Wallet to another
-     * @async
-     * @access protected
-    */
-
-    transferFunds = catchAsync(
-        async (req: CustomRequest, res: Response, next: NextFunction) => {
-            /**
-             * @type {Object} - An Object of fields to be queried.
-             */
-            const queryParams = { ...req.params };
-
-            const queryFields = { ...req.body };
-
-            /**
-             * @type {Object|null} - Holds either the returned data object or null.
-             *
-             * @description Updates a wallet
-             */
-
-            const { error, value: { data: wallet = {} } = {} } =
-                await this.WalletService.transferFunds(queryParams, queryFields);
-
-            if (error) {
-                return next(new AppError(error.msg, error.code));
-            }
-
-            // Returns a json response
-            res.status(STATUS.ACCEPTED).json({
-                message: MSG.SUCCESS,
-                wallet,
+                user,
             });
         }
     );
 }
 
-const walletCntrl = new WalletController();
+const userCntrl = new UserController();
 
-export default walletCntrl;
+export default userCntrl;

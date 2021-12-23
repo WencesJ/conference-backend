@@ -1,4 +1,4 @@
-import Wallet from './Model';
+import User from './Model';
 
 import Router from './routes';
 
@@ -7,7 +7,7 @@ import Controller from './controller';
 import Service from './service';
 
 export {
-    Wallet,
+    User,
     Service,
     Controller,
     Router,

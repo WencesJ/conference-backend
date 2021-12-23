@@ -1,17 +1,19 @@
 import { Router } from 'express';
 
 //Features
-import { Router as userRouter } from '@features/wallets';
+import { Router as userRouter } from '@api/users';
+import { Router as talkRouter } from '@api/talks';
 
 import { STATUS } from '@libs/shared/constants/responseConstants';
 
 const router = Router();
 
-router.use('/wallets', userRouter);
+router.use('/users', userRouter);
+router.use('/talks', talkRouter);
 
 router.get('/', (_, res) => {
     res.status(STATUS.ACCEPTED).json({
-        greetings: '<h1>Welcome to Figo-Payment Api 1</h1>'
+        greetings: '<h1>Welcome to conference Api 1</h1>'
     });
 });
 export default router;

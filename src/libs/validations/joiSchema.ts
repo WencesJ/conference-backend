@@ -4,6 +4,8 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 
 import { AppError } from '@libs/error';
 
+import helper from '@libs/shared/helpers';
+
 interface SanitizeSchema {
     params: Record<string, Joi.SchemaLike>,
     body: Record<string, Joi.SchemaLike>
@@ -11,11 +13,13 @@ interface SanitizeSchema {
 
 let validate: Record<string, SanitizeSchema> = {};
 
-export const registerSanitizeSchema = (schema: Record<string, SanitizeSchema>): void => {
+export const registerSanitizeSchema = (schema: Record<string, SanitizeSchema>) => {
     validate = {
         ...validate,
         ...schema
     }
+
+    return helper.convertKeyToValue(schema)
 }
 
 export const reqValidate = (endpoint: string): RequestHandler => {

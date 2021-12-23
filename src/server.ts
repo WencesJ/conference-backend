@@ -1,17 +1,16 @@
 /* eslint-disable no-unused-vars */
+require('dotenv').config({ path: './src/libs/config/config.env' });
 
 import './_globals';
 
 import { Logger } from 'winston';
 
-import mongoose from 'mongoose';
-
-import dotenv from 'dotenv';
-
-dotenv.config({ path: './src/libs/config/config.env' });
-
 import CONFIG from '@libs/config';
 
+import { DBConnection } from 'api/database';
+
+// importing express app
+import { app_init } from './app';
 
 interface customLogger extends Logger {
     exception: (name: Error) => Logger;
@@ -24,7 +23,7 @@ declare let _logger: customLogger;
 // end of requiring core  and 3rd party modules
 
 const {
-    config: { ENV, database },
+    config: { ENV },
 } = CONFIG;
 
 // HANDLING uncaughtException event
@@ -50,41 +49,13 @@ process.on('uncaughtException', (err) => {
     }, 100);
 });
 
-// connecting to database
-
-const DB_PROD = database.DB!.replace('<dbname>', database.NAME!)
-    .replace('<password>', database.PASSWORD!);
+// connecting database
+DBConnection();
 
 const PORT = ENV.PORT;
 
-const DB_DEV = database.LOCAL;
-
-const DATABASE = ENV.NODE_ENV === 'development' ? DB_DEV : DB_PROD;
-
-mongoose
-    .connect(DATABASE!, {
-        useCreateIndex: true,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-    })
-    .then(() => {
-        _logger.log('info', '✅✅✅ ➡ DATABASE CONNECTION IS SUCCESSFUL!');
-    })
-    .catch((err: Error) => {
-        // log to console
-        err.message += " Incorrect/Invalid Database string or Invalid Mongoose options.\nPlease make sure your mongodb connection string '`${DATABASE}`' is correct and your mongoose options are correct."
-        
-        _logger.log('error', err.message);
-        console.log(err);
-        // save to error log file
-        _logger.error(err);
-    });
-
-// importing express app
-import app from './app';
-
 //listening to app
+const app = app_init();
 const server = app.listen(PORT, async () => {
     _logger.log(
         'info',

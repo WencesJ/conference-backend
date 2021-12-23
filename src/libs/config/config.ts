@@ -6,6 +6,21 @@ interface ProcessEnv {
     [unit: string]: string | undefined;
 }
 
+interface SessionEnv {
+    NAME: string | undefined,
+    SECRET: string | undefined,
+    COOKIE_MAX_AGE: string | undefined,
+    STORE_SECRET: string | undefined,
+    STORE_TTL: string | undefined,
+    ABSOLUTE_TIMEOUT: string | undefined
+}
+
+interface envEnv {
+    NODE_ENV: string | undefined,
+    PORT: string | undefined,
+    PROD: string | undefined
+}
+
 const { env } = process;
 
 export const database: ProcessEnv = {
@@ -21,7 +36,7 @@ export const email: ProcessEnv = {
     PASS: env.EMAIL_PASSWORD,
 };
 
-export const session: ProcessEnv = {
+export const session: SessionEnv = {
     SECRET: env.SESSION_SECRET,
     NAME: env.SESSION_NAME,
     COOKIE_MAX_AGE: env.SESSION_COOKIE_MAX_AGE,
@@ -30,7 +45,7 @@ export const session: ProcessEnv = {
     ABSOLUTE_TIMEOUT: env.SESSION_ABSOLUTE_TIMEOUT,
 };
 
-export const ENV: ProcessEnv = {
+export const ENV: envEnv = {
     NODE_ENV: env.NODE_ENV,
     PORT: env.PORT,
     PROD: env.PROD,

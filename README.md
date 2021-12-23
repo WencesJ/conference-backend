@@ -1,20 +1,21 @@
 ## 🚀 Quick start
 
-Figo-Payment Project
+conference Project
 
-# Figo-Payment Project
+# conference Project
 
-Figo-Payment - A minimal wallet application
+conference - A minimal conference/chat application
 
-The simple **Figo-Payment Api** demonstrates a minimal wallet application that allows users to:
+The simple **conference Api** demonstrates a minimal conference/chat application that allows users to:
 
-**Registration and Authentication - Wallet Feature**
+**Registration and Authentication - Conference/chat Feature**
 
-    - Register(creates a wallet)
+    - Register(Add An Attendee)
     - Login
-    - Get a Wallet
-    - Update a Wallet
-    - Transfer Funds from wallet to another wallet
+    - Create A Talk
+    - Get All Talk
+    - Update a Talk
+    - Add Attendee To A Talk
   
 ### Prerequisites
 
@@ -29,13 +30,13 @@ To run this project locally, the follow tools need to be installed:
 Clone the project:
 
 ```
-git clone https://github.com/wencesJ/figo-payment-assessment.git
+git clone https://github.com/wencesJ/conference-backend.git
 ```
 
 Move into the project directory and install it's dependencies:
 
 ```
-cd figo-payment/
+cd conference/
 npm install
 ```
 
@@ -56,9 +57,9 @@ Todo:Api Documentation
 
 **Open the source code and start editing!**
 
-Your site is now running at `http://localhost:3000/api/v1/`
+Your site is now running at `http://localhost:5000/api/v1/`
 
-Open the `figo-payment` directory in your code editor of choice and edit files under `src`. Save your changes and the browser will update in real time!
+Open the `conference` directory in your code editor of choice and edit files under `src`. Save your changes and the browser will update in real time!
 
 **For working on the repository, you'll have to follow these steps:**
 

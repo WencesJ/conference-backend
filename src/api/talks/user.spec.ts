@@ -2,9 +2,9 @@ import request from 'supertest';
 
 import app from 'app';
 
-describe("Wallet Feature", function(){
-    it('/create - Creates a new wallet', function(done) {
-        request(app).post('/create').send({ walletname: 'bob', password: 'great'}).expect(200, done());
+describe("User Feature", function(){
+    it('/create - Creates a new user', function(done) {
+        request(app).post('/create').send({ username: 'bob', password: 'great'}).expect(200, done());
     });
 });
 

@@ -5,13 +5,15 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 
 import { Logger } from 'winston';
 
+import { Session } from 'express-session';
+
 import { catchAsync, AppError } from '@libs/error';
 
 import CONSTANTS from '@libs/shared/constants';
 
-const { STATUS } = CONSTANTS;
+import { verifyToken, createToken } from './jwt';
 
-import { Session } from 'express-session';
+const { STATUS } = CONSTANTS;
 
 interface RequestWithCustomPrpos extends Request {
     user?: { [unit: string]: any };
@@ -38,58 +40,60 @@ interface UserServiceType {
 
 // end requiring the modules
 class Authentication {
-    public Service: UserServiceType;
 
-    constructor(ComponentService: UserServiceType) {
-        this.Service = ComponentService;
+    constructor(public Service: UserServiceType) {}
+
+    private setAuthHeader = (res: Response, token: string) => {
+        res.setHeader('authorization', `${token}`);
     }
 
-    authorizedUser = catchAsync(
-        async (req: CustomRequest, _: Response, next: NextFunction) => {
-        const active_user = req.user;
+    private validateAuthorizationHeader = (req: CustomRequest) => {
         
-        req.params = active_user
-          ? {
-              _id: active_user._id,
-              ...req.params,
-            }
-          : {
-              ...req.params,
-            };
+        const { authorization } = req.headers;
     
-        req.query =
-          active_user
-            ? {
-                _id: active_user._id,
-                ...req.query,
-              }
-            : {
-                ...req.query,
-              };
+        if (!authorization) {
+            throw new AppError(
+                'Authentication Failed. Please Log In!',
+                STATUS.UNAUTHORIZED
+            );
+        }    
     
-        next();
-      });
+        const getToken = authorization.substring('bearer'.length).trim();
+    
+        const { data, error } = verifyToken(getToken);
+    
+        if (error) {
+            throw new AppError(
+                error, STATUS.UNAUTHORIZED
+            )
+        }
+        
+        return data as object;
+    };
 
     authorization: RequestHandler = catchAsync(
         async (req: CustomRequest, _: Response, next: NextFunction) => {
-            const { email, password }: { [x: string]: any } = req.session
-                ? req.session
-                : {};
+            try {
+                const { email, password }: { [x: string]: any } = this.validateAuthorizationHeader(req);
 
-            const { value } = await this.Service.logIn({ email, password });
+                const { value } = await this.Service.get({ email });
 
-            if (value !== undefined) {
-                req.user = value.data;
+                if (value !== undefined && value.password !== password) {
+                    req.user = value.data;
 
-                return next();
-            }
+                    return next();
+                }
 
-            next(
-                new AppError(
+                throw new AppError(
                     'Authentication Failed. Please Log In!',
                     STATUS.UNAUTHORIZED
-                )
-            );
+                );
+            }
+            catch(err:any) {
+                return next(err);
+            }
+
+            
         }
     );
 
@@ -116,16 +120,13 @@ class Authentication {
                 return next(new AppError(error.msg, error.code));
             }
 
-            req.session.email = user.email;
-            req.session.password = req.body.password;
+            const token = createToken({
+                _id: user.id,
+                email: user.email,
+                password: user.password,
+            });
 
-            setTimeout(
-                (session) => {
-                    session.destroy();
-                },
-                +req.session.cookie.maxAge! - 100,
-                req.session
-            );
+            this.setAuthHeader(res, token);
 
             res.status(STATUS.OK).json({
                 status: 'SUCCESS',
@@ -136,10 +137,8 @@ class Authentication {
     );
 
     logOut: RequestHandler = (req: Request, res: Response) => {
-        req.session.destroy((err) => {
-            _logger.log('error', err);
-        });
-
+        
+        //CLIENT SIDE HAS TO DELETE TOKEN FROM COOKIES
         res.status(STATUS.OK).json({
             status: 'SUCCESS',
             message: 'LOGGED OUT SUCCESSFULLY!',
@@ -148,11 +147,13 @@ class Authentication {
 
     changeEmail: RequestHandler = catchAsync(
         async (req: CustomRequest, res: Response, next: NextFunction) => {
-            const { email } = req.session;
+            if (!req.user) {
+                return next(new AppError('Authentication Failed. Please Log In!', STATUS.UNAUTHORIZED));
+            }
 
             const newEmail = req.body.email;
 
-            if (newEmail === email) {
+            if (newEmail === req.user.email) {
                 return res.status(STATUS.BAD_REQUEST).json({
                     status: 'FAILED',
                     message: 'EMAIL IS IDENTICAL TO CURRENT EMAIL!',
@@ -160,17 +161,13 @@ class Authentication {
             }
 
             const { error } = await this.Service.changeEmail({
-                email,
+                email: req.user.email,
                 newEmail
             });
 
             if (error) {
                 return next(new AppError(error.msg, error.code));
             }
-
-            req.session.destroy((err) => {
-                _logger.log('error', err);
-            });
 
             return res.status(STATUS.OK).json({
                 status: 'SUCCESS',
@@ -181,12 +178,15 @@ class Authentication {
 
     changePassword: RequestHandler = catchAsync(
         async (req: CustomRequest, res: Response, next: NextFunction) => {
-            const { email } = req.session;
+
+            if (!req.user) {
+                return next(new AppError('Authentication Failed. Please Log In!', STATUS.UNAUTHORIZED));
+            }
 
             const { currentPassword, password } = req.body;
 
             const { error } = await this.Service.changePassword({
-                email,
+                email: req.user.email,
                 currentPassword,
                 password,
             });
@@ -194,10 +194,6 @@ class Authentication {
             if (error) {
                 return next(new AppError(error.msg, error.code));
             }
-
-            req.session.destroy((err) => {
-                _logger.log('error', err);
-            });
 
             res.status(STATUS.OK).json({
                 status: 'SUCCESS',

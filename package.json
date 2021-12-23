@@ -7,7 +7,6 @@
         "test": "test"
     },
     "scripts": {
-        "build": "tsc && NODE_ENV=production nodemon dist/server.js",
         "start": "NODE_ENV=production nodemon -r tsconfig-paths/register src/server.ts ",
         "start:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register src/server.ts ",
         "clean": "rm -rf node_modules/ build/ yarn.lock package-lock.json *.log",

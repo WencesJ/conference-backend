@@ -7,7 +7,7 @@
         "test": "test"
     },
     "scripts": {
-        "start": "NODE_ENV=production nodemon -r tsconfig-paths/register src/server.ts ",
+        "start": "NODE_ENV=production nodemon x ts-node -r tsconfig-paths/register src/server.ts ",
         "start:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register src/server.ts ",
         "clean": "rm -rf node_modules/ build/ yarn.lock package-lock.json *.log",
         "lint": "eslint . & echo 'lint complete'",

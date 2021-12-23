@@ -8,7 +8,7 @@
     },
     "scripts": {
         "build": "tsc",
-        "start": "node -r tsconfig-paths/register dist/server.js",
+        "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
         "start:ts:prod": "NODE_ENV=production nodemon -r tsconfig-paths/register src/server.ts ",
         "start:ts:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register src/server.ts ",
         "clean": "rm -rf node_modules/ build/ yarn.lock package-lock.json *.log",
@@ -55,9 +55,7 @@
         "xss-clean": "^0.1.1",
         "ts-node": "^10.4.0",
         "tsconfig-paths": "^3.12.0",
-        "typescript": "^4.5.2"
-    },
-    "devDependencies": {
+        "typescript": "^4.5.2",
         "@types/bcrypt": "^3.0.0",
         "@types/cors": "^2.8.10",
         "@types/express": "^4.17.11",
@@ -79,5 +77,8 @@
         "nodemon": "^2.0.15",
         "npm-run-all": "^4.1.5",
         "supertest": "^6.1.6"
+    },
+    "devDependencies": {
+        
     }
 }

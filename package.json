@@ -8,7 +8,7 @@
     },
     "scripts": {
         "build": "tsc",
-        "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
+        "start": "node -r tsconfig-paths/register dist/server.js",
         "start:ts:prod": "NODE_ENV=production nodemon -r tsconfig-paths/register src/server.ts ",
         "start:ts:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register src/server.ts ",
         "clean": "rm -rf node_modules/ build/ yarn.lock package-lock.json *.log",
